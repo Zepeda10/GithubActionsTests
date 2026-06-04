@@ -22,6 +22,10 @@ jobs:
           target: test
           load: true
 
+      - name: Debug tag
+        run: |
+            echo "${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}-${{ github.sha }}"
+
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
