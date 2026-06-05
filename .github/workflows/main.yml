@@ -3,6 +3,10 @@ name: ci
 on:
   workflow_dispatch:
 
+env:
+  IMAGE_NAME: ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}
+  IMAGE_TAG: ${{ github.ref_name }}-${{ github.sha }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +28,7 @@ jobs:
 
       - name: Debug tag
         run: |
-            echo "${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}-${{ github.sha }}"
+            echo "$IMAGE_NAME:$IMAGE_TAG"
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -33,5 +37,5 @@ jobs:
           push: true
           target: final
           tags: | 
-            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.ref_name }}-${{ github.sha }}
-            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:latest
